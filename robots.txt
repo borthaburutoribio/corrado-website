@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# Sitio de muestra. Al pasar a produccion: Allow: / y Sitemap: <dominio>/sitemap.xml
