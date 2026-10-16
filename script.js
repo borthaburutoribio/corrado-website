@@ -1,212 +1,177 @@
-/* Dr. Gustavo Corrado — interacciones */
+/* Dr. Gustavo Corrado — interacciones compartidas */
 document.documentElement.classList.add('js');
+const WA = '5491126591809';
+const wa = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ROOT = (document.querySelector('.hd__brand')?.getAttribute('href')) || '';
 
-const WA_MAIN = '5491126591809';
-const wa = (text) => `https://wa.me/${WA_MAIN}?text=${encodeURIComponent(text)}`;
-
-/* ---------- menú mobile ---------- */
-const bar = document.querySelector('.bar');
-const menuBtn = document.querySelector('.bar__menu');
-menuBtn.addEventListener('click', () => {
-  const open = bar.classList.toggle('open');
+/* ---------- header + menú ---------- */
+const hd = document.querySelector('.hd');
+const menuBtn = document.querySelector('.hd__menu');
+addEventListener('scroll', () => hd.classList.toggle('scrolled', scrollY > 30), { passive: true });
+menuBtn?.addEventListener('click', () => {
+  const open = hd.classList.toggle('open');
   menuBtn.setAttribute('aria-expanded', open);
-  menuBtn.textContent = open ? 'Cerrar' : 'Menú';
+  menuBtn.querySelector('.sr').textContent = open ? 'Cerrar menú' : 'Abrir menú';
 });
-document.querySelectorAll('.bar__nav a').forEach(a => a.addEventListener('click', () => {
-  bar.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menú';
+$$('.nav__exp').forEach(b => b.addEventListener('click', () => {
+  const g = b.closest('.nav__g'); const on = g.classList.toggle('exp'); b.setAttribute('aria-expanded', on);
+}));
+$$('.nav a').forEach(a => a.addEventListener('click', () => { hd.classList.remove('open'); menuBtn?.setAttribute('aria-expanded', 'false'); }));
+addEventListener('keydown', e => { if (e.key === 'Escape' && hd.classList.contains('open')) { hd.classList.remove('open'); menuBtn.focus(); } });
+
+/* ---------- palabra que rota en el hero ---------- */
+$$('[data-rot]').forEach(el => {
+  const words = el.dataset.rot.split('|'); let i = 0;
+  if (reduce) return;
+  setInterval(() => {
+    el.classList.add('out');
+    setTimeout(() => { i = (i + 1) % words.length; el.textContent = words[i]; el.classList.remove('out'); }, 350);
+  }, 2400);
+});
+
+/* ---------- altura del escaneo láser ---------- */
+const setScan = () => $$('.scan__line').forEach(l => l.style.setProperty('--scan-h', (l.parentElement.clientHeight - 2) + 'px'));
+setScan(); addEventListener('resize', setScan);
+
+/* ---------- spotlight en tarjetas ---------- */
+$$('[data-spot]').forEach(c => c.addEventListener('pointermove', e => {
+  const r = c.getBoundingClientRect();
+  c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
 }));
 
-/* ---------- escenario fijo: cambia la foto según la sección ---------- */
-document.querySelectorAll('[data-split]').forEach(split => {
-  const imgs = split.querySelectorAll('.stage__frame img');
-  const caps = split.querySelectorAll('.stage__cap');
-  const show = (id) => {
-    imgs.forEach(i => i.classList.toggle('is-on', i.dataset.for === id));
-    caps.forEach(c => { c.hidden = c.dataset.capFor !== id; });
-  };
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) show(e.target.dataset.stage); });
-  }, { rootMargin: '-45% 0px -45% 0px' });
-  split.querySelectorAll('[data-stage]').forEach(s => io.observe(s));
+/* ---------- pestañas de tratamientos ---------- */
+const tabs = $$('.tab');
+function selectTab(t) {
+  tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => selectTab(t));
+  t.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; selectTab(n); n.focus(); }
+  });
 });
 
-/* ---------- guía por zonas ---------- */
+/* ---------- contadores ---------- */
+const cio = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return; cio.unobserve(e.target);
+  const el = e.target, end = +el.dataset.count, pre = el.dataset.prefix || '';
+  if (reduce) { el.textContent = pre + end; return; }
+  const t0 = performance.now(), dur = 1600;
+  const step = (now) => { const p = Math.min(1, (now - t0) / dur); el.textContent = pre + Math.round(end * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}), { threshold: .6 });
+$$('[data-count]').forEach(el => cio.observe(el));
+
+/* ---------- guía por zonas (inicio) ---------- */
+const L = (slug, name) => `<a href="${ROOT}${slug}/">${name}</a>`;
 const ZONES = {
-  mirada: {
-    title: 'Párpados y mirada',
-    say: 'Mi objetivo es una mirada más descansada y armónica, sin modificar la expresión natural del rostro.',
-    opts: [
-      { n: 'Blefaroplastia', d: 'Saca el exceso de piel de los párpados superiores y, según el caso, las bolsas de los inferiores. A veces ese exceso de piel también tapa parte del campo visual.',
-        f: [['Tipo', 'Cirugía'], ['Suele indicarse', 'desde los 35 años'], ['Antes', 'a veces, control oftalmológico']] },
-      { n: 'Valle de lágrimas', d: 'Ácido hialurónico para la ojera hundida, cuando no hace falta cirugía.',
-        f: [['Tipo', 'Inyectable']] }
-    ]
-  },
-  frente: {
-    title: 'Frente y entrecejo',
-    say: 'Se busca un resultado natural: que te vean descansada, no "hecha".',
-    opts: [
-      { n: 'Toxina botulínica', d: 'Para las arrugas que aparecen al gesticular: frente, entrecejo y patas de gallo. También levanta un poco la cola de la ceja.',
-        f: [['Dura', '4 a 6 meses'], ['Vuelta a la rutina', 'en el momento']] },
-      { n: 'Ultherapy', d: 'Ultrasonido que calienta las capas profundas sin tocar la superficie y estimula colágeno nuevo. Para cejas caídas y flacidez leve.',
-        f: [['Reposo', 'no hace falta']] }
-    ]
-  },
-  pomulos: {
-    title: 'Pómulos y surcos',
-    say: 'Cada paciente tiene un diagnóstico diferente. Por eso el primer paso siempre es la consulta.',
-    opts: [
-      { n: 'Ácido hialurónico', d: 'Surco nasogeniano, pómulos y la técnica Pointlift para levantar el tercio medio de la cara.',
-        f: [['Tipo', 'Inyectable']] },
-      { n: 'Radiesse', d: 'Hidroxiapatita de calcio: da volumen en el momento y además estimula tu propio colágeno. Muy usado para la flacidez.',
-        f: [['Dura', '12 a 18 meses'], ['Sesiones', 'cada 4 semanas a 3 meses']] },
-      { n: 'Plasma rico en plaquetas', d: 'Con tu propia sangre centrifugada. Mejora textura, firmeza y luminosidad de la piel.',
-        f: [['Sesiones', '2 a 3 por año'], ['Después', 'protector solar']] }
-    ]
-  },
-  nariz: {
-    title: 'Nariz',
-    say: 'No se trata de hacer más. Se trata de saber qué hacer, cuándo y por qué.',
-    opts: [
-      { n: 'Rinomodelación', d: 'Corrige el dorso o la punta con ácido hialurónico o Radiesse, sin cirugía.',
-        f: [['Tipo', 'Inyectable'], ['Cirugía', 'no']] }
-    ]
-  },
-  labios: {
-    title: 'Labios y mentón',
-    say: 'Un buen resultado no cambia quién sos.',
-    opts: [
-      { n: 'Delineado y volumen de labios', d: 'Ácido hialurónico para definir el contorno o dar volumen, a medida.',
-        f: [['Tipo', 'Inyectable']] },
-      { n: 'Mentón y líneas de marioneta', d: 'Ácido hialurónico para proyectar el mentón y suavizar las líneas que bajan desde la comisura.',
-        f: [['Tipo', 'Inyectable']] }
-    ]
-  },
-  contorno: {
-    title: 'Papada y contorno',
-    say: 'La clave no es solo reducir: es tratar la zona con criterio. Evalúo qué está generando esa pérdida de definición.',
-    opts: [
-      { n: 'Endolift con Endoláser VELAS', d: 'Mínimamente invasivo. Trabaja la grasa localizada, la firmeza de los tejidos y la definición del contorno mandibular.',
-        f: [['Láser', '1470 / 980 nm'], ['Cirugía tradicional', 'no']] },
-      { n: 'Lifting facial y cervical', d: 'Cuando hay más flacidez: reposiciona tejidos, define el ángulo del cuello y la línea de la mandíbula.',
-        f: [['Tipo', 'Cirugía']] }
-    ]
-  },
-  cuello: {
-    title: 'Cuello y rostro completo',
-    say: 'En cirugía facial mi prioridad no es seguir una tendencia: es indicar lo que cada rostro necesita.',
-    opts: [
-      { n: 'Lifting Deep Plane', d: 'Actúa sobre las estructuras profundas de la cara en lugar de estirar la piel, respetando la expresión.',
-        f: [['Tipo', 'Cirugía'], ['Dejar de fumar', '1 a 2 semanas antes']] },
-      { n: 'Lifting facial y cervical', d: 'Tensa músculos, saca el exceso de grasa y redistribuye la piel de la cara y el cuello. Se puede combinar con blefaroplastia.',
-        f: [['Tipo', 'Cirugía']] }
-    ]
-  },
-  orejas: {
-    title: 'Orejas',
-    say: 'Lo ideal en chicos es operar antes del ingreso escolar.',
-    opts: [
-      { n: 'Otoplastia', d: 'Corrige orejas en asa o prominentes y asimetrías. La cicatriz queda escondida detrás de la oreja.',
-        f: [['Duración', '90 min aprox.'], ['Alta', 'el mismo día'], ['Vendas', '48 a 72 h']] }
-    ]
-  },
-  cuerpo: {
-    title: 'Cuerpo y mamas',
-    say: 'Siempre con una evaluación médica previa y expectativas reales.',
-    opts: [
-      { n: 'Implantes mamarios', d: 'Gel de silicona de alta cohesividad, en general debajo del músculo pectoral.',
-        f: [['Cirugía', '1 h aprox.'], ['Manejar', 'a los 7 días'], ['Deporte', 'a los 30 días']] },
-      { n: 'Abdominoplastia', d: 'Saca el exceso de piel y grasa y tensa la pared abdominal. No es un método para bajar de peso.',
-        f: [['Cirugía', '2 a 6 h'], ['Internación', '1 a 3 días'], ['Trabajo', '2 a 4 semanas']] },
-      { n: 'Lipoescultura', d: 'Aspira grasa localizada de varias zonas para un contorno más armónico.',
-        f: [['Cirugía', '2 a 4 h'], ['Resultado final', 'a los 3 meses']] },
-      { n: 'Reducción mamaria e implantes de glúteos', d: 'Se evalúan en consulta según cada caso.',
-        f: [['Reducción', '2 a 4 h'], ['Glúteos', '2 h aprox.']] }
-    ]
-  }
+  mirada: { t: 'Párpados y mirada', q: 'Mi objetivo es una mirada más descansada y armónica, sin modificar la expresión natural del rostro.', o: [
+    [L('cirugia-de-parpados', 'Blefaroplastia'), 'Saca el exceso de piel de los párpados superiores y, según el caso, las bolsas de los inferiores.', [['Tipo', 'Cirugía'], ['Suele indicarse', 'desde los 35']]],
+    [L('rellenos-con-acido-hialuronico', 'Valle de lágrimas'), 'Ácido hialurónico para la ojera hundida, cuando no hace falta cirugía.', [['Tipo', 'Inyectable']]]] },
+  frente: { t: 'Frente y entrecejo', q: 'Que te vean descansada, no distinta.', o: [
+    [L('botox', 'Toxina botulínica'), 'Arrugas de expresión en frente, entrecejo y patas de gallo. También levanta la cola de la ceja.', [['Dura', '4 a 6 meses'], ['Reposo', 'no']]],
+    [L('ultherapy', 'Ultherapy'), 'Ultrasonido que estimula colágeno nuevo. Para cejas caídas y flacidez leve.', [['Reposo', 'no']]]] },
+  pomulos: { t: 'Pómulos y surcos', q: 'Cada paciente tiene un diagnóstico diferente. Por eso el primer paso siempre es la consulta.', o: [
+    [L('rellenos-con-acido-hialuronico', 'Ácido hialurónico'), 'Surco nasogeniano, pómulos y técnica Pointlift para levantar el tercio medio.', [['Tipo', 'Inyectable']]],
+    [L('relleno-con-radiesse', 'Radiesse'), 'Volumen inmediato y estímulo de tu propio colágeno.', [['Dura', '12 a 18 meses']]],
+    [L('plasma-rico-en-plaquetas', 'Plasma rico en plaquetas'), 'Con tu propia sangre: firmeza, luminosidad y textura.', [['Sesiones', '2 a 3 al año']]]] },
+  nariz: { t: 'Nariz', q: 'No se trata de hacer más. Se trata de saber qué hacer, cuándo y por qué.', o: [
+    [L('rellenos-con-acido-hialuronico', 'Rinomodelación'), 'Corrige dorso o punta con ácido hialurónico o Radiesse, sin cirugía.', [['Cirugía', 'no']]]] },
+  labios: { t: 'Labios y mentón', q: 'Un buen resultado no cambia quién sos.', o: [
+    [L('rellenos-con-acido-hialuronico', 'Labios'), 'Delineado y volumen con ácido hialurónico, a medida.', [['Tipo', 'Inyectable']]],
+    [L('rellenos-con-acido-hialuronico', 'Mentón y líneas de marioneta'), 'Proyecta el mentón y suaviza las líneas que bajan de la comisura.', [['Tipo', 'Inyectable']]]] },
+  contorno: { t: 'Papada y contorno', q: 'La clave no es solo reducir: es tratar la zona con criterio.', o: [
+    [L('cirugia-laser', 'Endolift con Endoláser VELAS'), 'Grasa localizada, firmeza y definición mandibular, de forma mínimamente invasiva.', [['Láser', '1470 / 980 nm'], ['Cirugía tradicional', 'no']]],
+    [L('lifting-facial-y-cervical', 'Lifting cervical'), 'Cuando hay más flacidez: recupera el ángulo del cuello y la línea de la mandíbula.', [['Tipo', 'Cirugía']]]] },
+  cuello: { t: 'Cuello y rostro completo', q: 'Mi prioridad no es seguir una tendencia: es indicar lo que cada rostro necesita.', o: [
+    [L('lifting-facial-y-cervical', 'Lifting Deep Plane'), 'Trabaja las estructuras profundas en lugar de estirar la piel.', [['Tipo', 'Cirugía'], ['Dejar de fumar', '1–2 semanas antes']]]] },
+  orejas: { t: 'Orejas', q: 'En chicos, lo ideal es operar antes de empezar el colegio.', o: [
+    [L('auriculoplastia', 'Otoplastia'), 'Orejas en asa o prominentes. Cicatriz escondida detrás de la oreja.', [['Duración', '90 min'], ['Alta', 'el mismo día']]]] },
+  cuerpo: { t: 'Cuerpo y mamas', q: 'Siempre con una evaluación previa y expectativas reales.', o: [
+    [L('implantes-mamarios', 'Implantes mamarios'), 'Gel de silicona de alta cohesividad, debajo del músculo.', [['Cirugía', '1 h'], ['Deporte', 'a los 30 días']]],
+    [L('abdominoplastia', 'Abdominoplastia'), 'Saca piel y grasa sobrante y tensa los músculos.', [['Cirugía', '2 a 6 h']]],
+    [L('lipoescultura', 'Lipoescultura'), 'Grasa localizada de varias zonas a la vez.', [['Resultado final', '3 meses']]]] },
 };
-
 const result = document.getElementById('guia-resultado');
-const chips = document.querySelectorAll('.chip');
-const spots = document.querySelectorAll('.spot');
-const esc = (s) => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-function renderZone(key, focus) {
-  const z = ZONES[key];
-  if (!z) return;
-  const opts = z.opts.map(o => `
-    <div class="opt"><h4>${esc(o.n)}</h4><p>${esc(o.d)}</p>
-      <dl>${o.f.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-    </div>`).join('');
-  const msg = `Hola Dr. Corrado, me gustaría una evaluación por ${z.title.toLowerCase()} (${z.opts.map(o => o.n).join(', ')}).`;
+function zone(k, scroll) {
+  const z = ZONES[k]; if (!z || !result) return;
+  const names = z.o.map(o => o[0].replace(/<[^>]+>/g, '')).join(', ');
   result.classList.remove('swap');
-  result.innerHTML = `<h3 class="result__title">${esc(z.title)}</h3>${opts}
-    <p class="say">«${esc(z.say)}»</p>
-    <a class="btn" href="${wa(msg)}" target="_blank" rel="noopener">Consultar esto por WhatsApp <span class="btn__arrow" aria-hidden="true">→</span></a>`;
-  void result.offsetWidth;
-  result.classList.add('swap');
-  chips.forEach(c => c.setAttribute('aria-pressed', c.dataset.zone === key));
-  spots.forEach(s => s.classList.toggle('is-on', s.dataset.zone === key));
-  if (focus && window.matchMedia('(max-width: 1100px)').matches) {
-    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+  result.innerHTML = `<h3 class="result__t">${z.t}</h3>` + z.o.map(([n, d, f]) => `<div class="opt"><h4>${n}</h4><p>${d}</p><dl>${f.map(([a, b]) => `<div><dt>${a}</dt><dd>${b}</dd></div>`).join('')}</dl></div>`).join('') +
+    `<p class="say-q">«${z.q}»</p><a class="btn btn--glow" href="${wa(`Hola Dr. Corrado, me gustaría una evaluación por ${z.t.toLowerCase()} (${names}).`)}" target="_blank" rel="noopener">Consultar esto por WhatsApp <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>`;
+  void result.offsetWidth; result.classList.add('swap');
+  $$('.guide .pill').forEach(p => p.setAttribute('aria-pressed', p.dataset.zone === k));
+  $$('.guide .spot').forEach(s => s.classList.toggle('is-on', s.dataset.zone === k));
+  if (scroll && innerWidth < 1100) result.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
 }
-chips.forEach(c => c.addEventListener('click', () => renderZone(c.dataset.zone, false)));
-spots.forEach(s => s.addEventListener('click', () => renderZone(s.dataset.zone, true)));
-renderZone('mirada', false);
+$$('.guide .pill').forEach(p => p.addEventListener('click', () => zone(p.dataset.zone)));
+$$('.guide .spot').forEach(s => s.addEventListener('click', () => zone(s.dataset.zone, true)));
+if (result) zone('mirada');
 
 /* ---------- antes / después ---------- */
-const frame = document.getElementById('ba-frame');
-const range = document.getElementById('ba-range');
-const before = document.getElementById('ba-before');
-const after = document.getElementById('ba-after');
-const cap = document.getElementById('ba-cap');
-range.addEventListener('input', () => frame.style.setProperty('--pos', range.value + '%'));
-document.querySelectorAll('.case').forEach(b => b.addEventListener('click', () => {
-  const k = b.dataset.case, name = b.textContent.trim();
-  frame.style.setProperty('--ratio', `${b.dataset.w}/${b.dataset.h}`);
-  before.src = `assets/img/antes-despues/${k}-antes.jpg`;
-  after.src = `assets/img/antes-despues/${k}-despues.jpg`;
-  [before, after].forEach(i => { i.width = b.dataset.w; i.height = b.dataset.h; });
-  before.alt = `${name}, antes del tratamiento con ${b.dataset.t.toLowerCase()}`;
-  after.alt = `${name}, después del tratamiento con ${b.dataset.t.toLowerCase()}`;
-  cap.textContent = `${name} · ${b.dataset.t}`;
-  range.value = 50; frame.style.setProperty('--pos', '50%');
-  document.querySelectorAll('.case').forEach(x => x.setAttribute('aria-pressed', x === b));
+$$('[data-ba]').forEach(ba => {
+  const root = ba.dataset.root || '';
+  const frame = ba.querySelector('.ba__frame'), range = ba.querySelector('.ba__range');
+  const b = ba.querySelector('.ba__b'), a = ba.querySelector('.ba__a img'), cap = ba.querySelector('.ba__cap');
+  range.addEventListener('input', () => frame.style.setProperty('--pos', range.value + '%'));
+  ba.querySelectorAll('[data-case]').forEach(btn => btn.addEventListener('click', () => {
+    const k = btn.dataset.case, n = btn.textContent.trim();
+    frame.style.setProperty('--ratio', `${btn.dataset.w}/${btn.dataset.h}`);
+    b.src = `${root}assets/img/antes-despues/${k}-antes.jpg`; a.src = `${root}assets/img/antes-despues/${k}-despues.jpg`;
+    b.alt = `${n}, antes`; a.alt = `${n}, después`;
+    cap.innerHTML = `<b>${n}</b><span>${btn.dataset.t}</span>`;
+    range.value = 50; frame.style.setProperty('--pos', '50%');
+    ba.querySelectorAll('[data-case]').forEach(x => x.setAttribute('aria-pressed', x === btn));
+  }));
+});
+
+/* ---------- turnero → WhatsApp ---------- */
+$$('[data-booker]').forEach(f => f.addEventListener('submit', e => {
+  e.preventDefault();
+  const d = new FormData(f);
+  const sede = d.get('sede'), tr = d.get('trat');
+  const num = sede === 'Nordelta' ? '5491135184999' : WA;
+  const txt = `Hola Dr. Corrado, quisiera un turno en ${sede}, un ${d.get('dia')} ${d.get('hora')}${tr ? `, para consultar por ${tr.toLowerCase()}` : ''}.`;
+  open(`https://wa.me/${num}?text=${encodeURIComponent(txt)}`, '_blank', 'noopener');
+}));
+$$('[data-contact]').forEach(f => f.addEventListener('submit', e => {
+  e.preventDefault();
+  const d = new FormData(f), err = f.querySelector('.err');
+  const nombre = (d.get('nombre') || '').trim();
+  if (!nombre) { err.hidden = false; f.querySelector('[name=nombre]').focus(); return; }
+  err.hidden = true;
+  const tr = d.get('trat'), msg = (d.get('msg') || '').trim();
+  open(wa(`Hola Dr. Corrado, soy ${nombre}.${tr ? ` Quisiera consultar por ${tr.toLowerCase()}.` : ''}${msg ? ` ${msg}` : ''}`), '_blank', 'noopener');
 }));
 
+/* ---------- índice de la página (tratamientos) ---------- */
+const tocLinks = $$('.toc a');
+if (tocLinks.length) {
+  const tio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) tocLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-30% 0px -60% 0px' });
+  $$('.tsec[id]').forEach(s => tio.observe(s));
+}
+
 /* ---------- compartir ---------- */
-document.querySelectorAll('[data-share]').forEach(btn => btn.addEventListener('click', async () => {
-  const data = { title: 'Dr. Gustavo Corrado · Cirujano plástico', url: location.href };
+$$('[data-share]').forEach(btn => btn.addEventListener('click', async () => {
   try {
-    if (navigator.share) await navigator.share(data);
-    else { await navigator.clipboard.writeText(location.href); btn.textContent = 'Link copiado'; setTimeout(() => btn.textContent = 'Compartir este sitio', 2200); }
+    if (navigator.share) await navigator.share({ title: document.title, url: location.href });
+    else { await navigator.clipboard.writeText(location.href); const t = btn.textContent; btn.textContent = 'Link copiado'; setTimeout(() => btn.textContent = t, 2200); }
   } catch (e) { /* cancelado */ }
 }));
 
-/* ---------- botón fijo en mobile: aparece después del hero ---------- */
+/* ---------- botón fijo en celular ---------- */
 const dock = document.querySelector('.dock');
-const hero = document.getElementById('inicio');
-new IntersectionObserver(([e]) => dock.classList.toggle('show', !e.isIntersecting), { threshold: 0.1 }).observe(hero);
+const first = document.querySelector('.hero, .phero');
+if (dock && first) new IntersectionObserver(([e]) => dock.classList.toggle('show', !e.isIntersecting), { threshold: .05 }).observe(first);
 
 /* ---------- entradas escalonadas ---------- */
-const groups = document.querySelectorAll('.col > section:not(.hero), .menu, .slip-sec, .places, .faq, .foot__top');
-groups.forEach(g => {
-  const kids = g.matches('.menu, .slip-sec, .faq') ? g.children : g.querySelectorAll(':scope > *');
-  [...kids].slice(0, 14).forEach((k, i) => { k.classList.add('rv'); k.style.setProperty('--d', `${Math.min(i, 8) * 70}ms`); });
+const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+$$('.sec__head, .tgrid > *, .why > li, .bento > *, .reviews > *, .qa, .counters__in > *, .tsec, .tl__i, .place, .doc__txt > *, .resumen .big, .tldr, .review-cta, .booker, .ft__cta > *').forEach((el, i, all) => {
+  const sib = [...el.parentElement.children].indexOf(el);
+  el.classList.add('rv'); el.style.setProperty('--d', `${Math.min(sib, 6) * 70}ms`); rio.observe(el);
 });
-const rio = new IntersectionObserver(entries => entries.forEach(e => {
-  if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); }
-}), { rootMargin: '0px 0px -8% 0px' });
-document.querySelectorAll('.rv').forEach(el => rio.observe(el));
-document.querySelectorAll('.sheet .row, .slip .row, .cv > div').forEach((r, i) => {
-  r.classList.add('rv'); r.style.setProperty('--d', `${(i % 6) * 60}ms`); rio.observe(r);
-});
-
-/* ---------- la barra ocupa todo el ancho fuera de las zonas con foto fija ---------- */
-const splitsAtTop = new Set();
-const topIO = new IntersectionObserver(entries => {
-  entries.forEach(e => e.isIntersecting ? splitsAtTop.add(e.target) : splitsAtTop.delete(e.target));
-  bar.classList.toggle('wide', splitsAtTop.size === 0);
-}, { rootMargin: '0px 0px -96% 0px' });
-document.querySelectorAll('[data-split]').forEach(s => topIO.observe(s));
