@@ -175,3 +175,29 @@ $$('.sec__head, .tgrid > *, .why > li, .bento > *, .reviews > *, .qa, .counters_
   const sib = [...el.parentElement.children].indexOf(el);
   el.classList.add('rv'); el.style.setProperty('--d', `${Math.min(sib, 6) * 70}ms`); rio.observe(el);
 });
+
+/* ---------- "Pedir turno" abre el formulario ---------- */
+const modal = document.getElementById('modal-turno');
+if (modal && typeof modal.showModal === 'function') {
+  let opener = null;
+  $$('[data-turno]').forEach(btn => btn.addEventListener('click', e => {
+    e.preventDefault(); opener = btn;
+    hd.classList.remove('open'); menuBtn?.setAttribute('aria-expanded', 'false');
+    const sel = modal.querySelector('select[name=trat]');
+    if (sel) sel.value = btn.dataset.trat || '';
+    modal.showModal();
+    modal.querySelector('input:checked')?.focus();
+  }));
+  const close = () => { modal.close(); };
+  modal.querySelector('[data-close]').addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  modal.addEventListener('close', () => opener?.focus());
+  modal.querySelector('form').addEventListener('submit', () => setTimeout(close, 300));
+}
+
+/* ---------- atajos "¿Qué me preocupa realmente?" ---------- */
+$$('.worry__b').forEach(b => b.addEventListener('click', () => {
+  $$('.worry__b').forEach(x => x.setAttribute('aria-pressed', x === b));
+  zone(b.dataset.zone, true);
+  if (innerWidth >= 1100) document.querySelector('.guide__panel')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+}));

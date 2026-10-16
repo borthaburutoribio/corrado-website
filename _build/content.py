@@ -471,3 +471,27 @@ CV = [
   ("2026", "Disertante en Masterhub y VELAS Experience Mendoza", "Nuevo consultorio en Nordelta"),
   ("2027", "Disertante en BAAS Congress", "Buenos Aires"),
 ]
+
+IG_USER = "gc.cirujanoplastico"
+IG_URL = "https://www.instagram.com/gc.cirujanoplastico/"
+IG_STATS = ("12,2 mil", "364")  # seguidores, publicaciones (16/10/2026)
+# (imagen en assets/img/ig/, link del posteo, tipo, texto corto)
+IG_POSTS = [
+  ("nordelta", "p/DeaaXnPDhpS", "post", "Bienvenida al nuevo espacio de Nordelta"),
+  ("masterhub", "p/Dd-BKwxh-mZ", "post", "Charla en Masterhub 2026, Hotel Hilton"),
+  ("blefaroplastia-antes-despues", "reel/DccLk-_AEwH", "reel", "Blefaroplastia: antes y después"),
+  ("deep-plane", "p/DcPLF7RGM2N", "post", "¿La técnica más conocida es siempre la mejor?"),
+  ("endolaser-paciente-joven", "reel/DbWn9VKA4CN", "reel", "Endoláser en paciente joven"),
+  ("testimonio-mari", "reel/DaqLONHxCnB", "reel", "Testimonio de Mari: Endolifting de papada"),
+  ("que-me-preocupa", "p/DdW3csdmMeV", "post", "No necesitás llegar sabiendo qué elegir"),
+  ("velas-mendoza", "p/DeNQc59BdeC", "post", "VELAS Experience Mendoza, 30 de octubre"),
+]
+
+# Historias destacadas del perfil (id, título, ícono)
+IG_HIGHLIGHTS = [
+  ("18206603998047509", "Celebrities", "star"),
+  ("17972728336361330", "Testimonios", "chat"),
+  ("18163009918129868", "Botox", "syringe"),
+  ("18191071585032836", "Rinomodelación", "nose"),
+  ("17868832699629389", "Contacto", "phone"),
+]

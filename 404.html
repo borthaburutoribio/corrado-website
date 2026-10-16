@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/corrado-website/styles.css?v=7">
+<link rel="stylesheet" href="/corrado-website/styles.css?v=9">
 
 </head>
 <body>
@@ -42,9 +42,9 @@
       <li><a class="nav__top" href="/corrado-website/consultorios/">Consultorios</a></li>
       <li><a class="nav__top" href="/corrado-website/contacto/">Contacto</a></li>
     </ul>
-    <a class="btn btn--glow nav__cta" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20un%20turno." target="_blank" rel="noopener">Pedir turno por WhatsApp <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    <a class="btn btn--glow nav__cta" href="/corrado-website/#turnos" data-turno>Pedir turno <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
   </nav>
-  <a class="btn btn--glow btn--sm hd__cta" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20un%20turno." target="_blank" rel="noopener">Pedir turno</a>
+  <a class="btn btn--glow btn--sm hd__cta" href="/corrado-website/#turnos" data-turno>Pedir turno</a>
   <button class="hd__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Abrir menú</span><i></i><i></i></button>
 </header>
 <main id="contenido">
@@ -68,7 +68,37 @@
   <p class="ft__word" aria-hidden="true">Gustavo Corrado</p>
   <p class="ft__legal wrap">Dr. Gustavo Corrado · Cirujano plástico · MN 113095 · Miembro de la SCPBA. La información de este sitio no reemplaza una consulta médica; los resultados varían en cada paciente. Fotos: archivo del doctor, @gc.cirujanoplastico y Saffiro Tecnologías Médicas. Propuesta de diseño de Tranquera Digital.</p>
 </footer>
-<div class="dock"><a class="btn btn--glow" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20una%20evaluaci%C3%B3n." target="_blank" rel="noopener">Pedir evaluación por WhatsApp</a></div>
-<script src="/corrado-website/script.js?v=7" defer></script>
+<a class="igfab" href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener" aria-label="Instagram del doctor, @gc.cirujanoplastico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg><span>@gc.cirujanoplastico</span></a>
+<div class="dock"><a class="btn btn--glow" href="/corrado-website/#turnos" data-turno>Pedir turno</a><a class="dock__ig" href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener" aria-label="Instagram del doctor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg></a></div>
+<dialog class="modal" id="modal-turno" aria-labelledby="modal-t">
+  <div class="modal__box">
+    <button class="modal__x" type="button" data-close aria-label="Cerrar">✕</button>
+    <h2 id="modal-t" class="h3">Pedí tu turno</h2>
+    <p class="modal__sub">Elegí sede, día y horario. Se abre WhatsApp con el mensaje listo para enviar.</p>
+    <form class="booker glass" data-booker>
+      <fieldset><legend>Consultorio</legend>
+        <label><input type="radio" name="sede" value="Belgrano" checked><span>Belgrano<small>Arcos 2173</small></span></label>
+        <label><input type="radio" name="sede" value="Nordelta"><span>Nordelta<small>Nuevo</small></span></label>
+      </fieldset>
+      <fieldset><legend>Día</legend>
+        <label><input type="radio" name="dia" value="lunes" checked><span>Lun</span></label>
+        <label><input type="radio" name="dia" value="martes"><span>Mar</span></label>
+        <label><input type="radio" name="dia" value="miércoles"><span>Mié</span></label>
+        <label><input type="radio" name="dia" value="jueves"><span>Jue</span></label>
+        <label><input type="radio" name="dia" value="viernes"><span>Vie</span></label>
+      </fieldset>
+      <fieldset><legend>Horario</legend>
+        <label><input type="radio" name="hora" value="por la mañana" checked><span>Mañana</span></label>
+        <label><input type="radio" name="hora" value="por la tarde"><span>Tarde</span></label>
+      </fieldset>
+      <label class="field"><span>¿Qué te gustaría consultar? (opcional)</span>
+        <select name="trat"><option value="">Elegí un tratamiento…</option><option>Blefaroplastia</option><option>Lifting facial y Deep Plane</option><option>Otoplastia</option><option>Implantes mamarios</option><option>Reducción mamaria</option><option>Abdominoplastia</option><option>Lipoescultura</option><option>Lipoescultura láser</option><option>Implantes de glúteos</option><option>Toxina botulínica</option><option>Ácido hialurónico</option><option>Radiesse</option><option>Plasma rico en plaquetas</option><option>Ultherapy</option><option>Endolift · Endoláser VELAS</option><option>Chip hormonal</option><option>Otra consulta</option></select>
+      </label>
+      <button class="btn btn--glow btn--lg" type="submit">Enviar por WhatsApp <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </form>
+    <p class="note">¿Preferís escribir directo? <a class="link" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado" target="_blank" rel="noopener">WhatsApp 11 2659-1809</a></p>
+  </div>
+</dialog>
+<script src="/corrado-website/script.js?v=9" defer></script>
 </body>
 </html>

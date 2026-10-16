@@ -5,11 +5,11 @@ Uso:  python _build/build.py   (desde la raíz del proyecto)
 Cada página vive en /<slug>/index.html, igual que las URLs de la web vieja.
 """
 import json, os, html, urllib.parse
-from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA
+from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, IG_USER, IG_URL, IG_STATS, IG_POSTS, IG_HIGHLIGHTS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://borthaburutoribio.github.io/corrado-website/"
-V = "7"  # versión de css/js (cache)
+V = "9"  # versión de css/js (cache)
 e = html.escape
 
 
@@ -47,19 +47,96 @@ def nav(r, current):
       {li("consultorios", "Consultorios")}
       {li("contacto", "Contacto")}
     </ul>
-    <a class="btn btn--glow nav__cta" href="{wa("Hola Dr. Corrado, quisiera pedir un turno.")}" target="_blank" rel="noopener">Pedir turno por WhatsApp {arrow()}</a>
+    <a class="btn btn--glow nav__cta" href="{r}#turnos" data-turno>Pedir turno {arrow()}</a>
   </nav>
-  <a class="btn btn--glow btn--sm hd__cta" href="{wa("Hola Dr. Corrado, quisiera pedir un turno.")}" target="_blank" rel="noopener">Pedir turno</a>
+  <a class="btn btn--glow btn--sm hd__cta" href="{r}#turnos" data-turno>Pedir turno</a>
   <button class="hd__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Abrir menú</span><i></i><i></i></button>
 </header>'''
 
 
-def footer(r):
+IG_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>'
+REEL_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7.5-4.5z" fill="currentColor"/></svg>'
+
+
+def booker_form(trat=""):
+    opts = "".join(f'<option{" selected" if x["name"] == trat else ""}>{e(x["name"])}</option>' for x in T)
+    return f'''<form class="booker glass" data-booker>
+      <fieldset><legend>Consultorio</legend>
+        <label><input type="radio" name="sede" value="Belgrano" checked><span>Belgrano<small>Arcos 2173</small></span></label>
+        <label><input type="radio" name="sede" value="Nordelta"><span>Nordelta<small>Nuevo</small></span></label>
+      </fieldset>
+      <fieldset><legend>Día</legend>
+        <label><input type="radio" name="dia" value="lunes" checked><span>Lun</span></label>
+        <label><input type="radio" name="dia" value="martes"><span>Mar</span></label>
+        <label><input type="radio" name="dia" value="miércoles"><span>Mié</span></label>
+        <label><input type="radio" name="dia" value="jueves"><span>Jue</span></label>
+        <label><input type="radio" name="dia" value="viernes"><span>Vie</span></label>
+      </fieldset>
+      <fieldset><legend>Horario</legend>
+        <label><input type="radio" name="hora" value="por la mañana" checked><span>Mañana</span></label>
+        <label><input type="radio" name="hora" value="por la tarde"><span>Tarde</span></label>
+      </fieldset>
+      <label class="field"><span>¿Qué te gustaría consultar? (opcional)</span>
+        <select name="trat"><option value="">Elegí un tratamiento…</option>{opts}<option>Otra consulta</option></select>
+      </label>
+      <button class="btn btn--glow btn--lg" type="submit">Enviar por WhatsApp {arrow()}</button>
+    </form>'''
+
+
+def ig_tiles(r, posts):
+    out = ""
+    for img, url, kind, txt in posts:
+        badge = f'<span class="ig__kind">{REEL_ICON}<span class="sr">Reel</span></span>' if kind == "reel" else ""
+        out += f'''<a class="ig__tile" href="https://www.instagram.com/{url}/" target="_blank" rel="noopener">
+      <img src="{r}assets/img/ig/{img}.jpg" width="560" height="700" alt="{e(txt)}" loading="lazy">{badge}
+      <span class="ig__ov"><span>{e(txt)}</span><b>{IG_ICON} Ver en Instagram</b></span></a>'''
+    return out
+
+
+HL_ICONS = {
+    "star": '<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+    "chat": '<path d="M5 18.5l1.3-3.4A7 7 0 1 1 9 18z"/><path d="M9 10.5h6M9 13.5h4"/>',
+    "syringe": '<path d="M14.5 4.5l5 5M17 7l-8.5 8.5-3 .5.5-3L14.5 4.5"/><path d="M5.5 18.5l-2 2M10 11l2 2M12 9l2 2"/>',
+    "nose": '<path d="M12 4c0 5-3.5 8.5-3.5 11.5 0 1.6 1.4 2.5 3 2.5h.5M14.5 18c1.3 0 2.5-.8 2.5-2.2"/>',
+    "phone": '<path d="M7.5 4.5l2.5 4-1.8 1.6a10 10 0 0 0 5.7 5.7l1.6-1.8 4 2.5-.8 2.6c-.3.8-1 1.3-1.9 1.2C10.6 19.7 4.3 13.4 3.7 7.2c-.1-.9.4-1.6 1.2-1.9z"/>',
+}
+
+
+def highlights():
+    out = ""
+    for hid, name, ic in IG_HIGHLIGHTS:
+        out += f'<a class="hl" href="https://www.instagram.com/stories/highlights/{hid}/" target="_blank" rel="noopener"><span class="hl__ring"><span class="hl__in"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">{HL_ICONS[ic]}</svg></span></span><span class="hl__t">{e(name)}</span></a>'
+    return f'<div class="hls" aria-label="Historias destacadas">{out}</div>'
+
+
+def ig_section(r, compact=False):
+    posts = IG_POSTS[:4] if compact else IG_POSTS
+    blurb = "Más casos y videos en su Instagram." if compact else "Casos, técnicas y respuestas a las preguntas de siempre, contados por el doctor."
+    title = '<h2 id="ig-t" class="h3">En Instagram</h2>' if compact else '<h2 id="ig-t" class="h2">Instagram</h2>'
+    return f'''<section class="sec ig{" ig--compact" if compact else ""}" id="instagram" aria-labelledby="ig-t">
+  <div class="wrap">
+    {title}
+    <div class="ig__head">
+      <a class="ig__prof" href="{IG_URL}" target="_blank" rel="noopener">
+        <span class="ig__ring"><img src="{r}assets/img/dr-gustavo-corrado-retrato.jpg" width="340" height="595" alt="" loading="lazy"></span>
+        <span><b>@{IG_USER}</b><small>{IG_STATS[0]} seguidores · {IG_STATS[1]} publicaciones</small></span>
+      </a>
+      <p>{blurb}</p>
+      <a class="btn btn--glow" href="{IG_URL}" target="_blank" rel="noopener">Seguir en Instagram {arrow()}</a>
+    </div>
+    {"" if compact else highlights()}
+    <div class="ig__grid">{ig_tiles(r, posts)}</div>
+  </div>
+</section>'''
+
+
+def footer(r, current=""):
     cols = ""
     for cat in CATS:
         items = "".join(f'<li><a href="{r}{x["slug"]}/">{e(x["menu"])}</a></li>' for x in T if x["cat"] == cat)
         cols += f'<div><h3><a href="{r}{cat}/">{CATS[cat]["name"]}</a></h3><ul>{items}</ul></div>'
-    return f'''<footer class="ft">
+    strip = ig_section(r, compact=True) if current not in ("home", "404") else ""
+    return strip + f'''<footer class="ft">
   <div class="ft__cta wrap">
     <p class="ft__big">¿Qué te gustaría mejorar?<br><span>Contámelo y lo vemos en consulta.</span></p>
     <a class="btn btn--glow btn--lg" href="{wa("Hola Dr. Corrado, quisiera pedir una evaluación.")}" target="_blank" rel="noopener">Pedir evaluación {arrow()}</a>
@@ -77,7 +154,17 @@ def footer(r):
   <p class="ft__word" aria-hidden="true">Gustavo Corrado</p>
   <p class="ft__legal wrap">Dr. Gustavo Corrado · Cirujano plástico · MN 113095 · Miembro de la SCPBA. La información de este sitio no reemplaza una consulta médica; los resultados varían en cada paciente. Fotos: archivo del doctor, @gc.cirujanoplastico y Saffiro Tecnologías Médicas. Propuesta de diseño de Tranquera Digital.</p>
 </footer>
-<div class="dock"><a class="btn btn--glow" href="{wa("Hola Dr. Corrado, quisiera pedir una evaluación.")}" target="_blank" rel="noopener">Pedir evaluación por WhatsApp</a></div>'''
+<a class="igfab" href="{IG_URL}" target="_blank" rel="noopener" aria-label="Instagram del doctor, @{IG_USER}">{IG_ICON}<span>@{IG_USER}</span></a>
+<div class="dock"><a class="btn btn--glow" href="{r}#turnos" data-turno>Pedir turno</a><a class="dock__ig" href="{IG_URL}" target="_blank" rel="noopener" aria-label="Instagram del doctor">{IG_ICON}</a></div>
+<dialog class="modal" id="modal-turno" aria-labelledby="modal-t">
+  <div class="modal__box">
+    <button class="modal__x" type="button" data-close aria-label="Cerrar">✕</button>
+    <h2 id="modal-t" class="h3">Pedí tu turno</h2>
+    <p class="modal__sub">Elegí sede, día y horario. Se abre WhatsApp con el mensaje listo para enviar.</p>
+    {booker_form()}
+    <p class="note">¿Preferís escribir directo? <a class="link" href="{wa("Hola Dr. Corrado")}" target="_blank" rel="noopener">WhatsApp 11 2659-1809</a></p>
+  </div>
+</dialog>'''
 
 
 def page(r, current, title, desc, body, schema=None, og_img="assets/img/dr-gustavo-corrado-nordelta-mercedes-pitrau.jpg"):
@@ -110,7 +197,7 @@ def page(r, current, title, desc, body, schema=None, og_img="assets/img/dr-gusta
 <main id="contenido">
 {body}
 </main>
-{footer(r)}
+{footer(r, current)}
 <script src="{r}script.js?v={V}" defer></script>
 </body>
 </html>
@@ -260,6 +347,15 @@ def home():
     <div class="guide__head">
       <h2 id="guia-t" class="h2">¿Qué te gustaría mejorar?</h2>
       <p>Tocá una zona del rostro. Te muestro qué se suele indicar y te dejo el WhatsApp con el mensaje armado.</p>
+      <div class="worry">
+        <p class="worry__q">¿Qué me preocupa realmente?</p>
+        <div class="worry__opts">
+          <button type="button" class="worry__b" data-zone="mirada"><span>Una mirada cansada</span></button>
+          <button type="button" class="worry__b" data-zone="contorno"><span>Pérdida de definición del rostro</span></button>
+          <button type="button" class="worry__b" data-zone="cuello"><span>Exceso de piel o flacidez en el cuello</span></button>
+        </div>
+        <p class="note">La pregunta que el doctor propone en su <a class="link" href="https://www.instagram.com/p/DdW3csdmMeV/" target="_blank" rel="noopener">Instagram</a> antes de cada primera consulta.</p>
+      </div>
     </div>
     <figure class="guide__face">
       <img src="assets/img/t/hero-rostro-marcacion.jpg" width="800" height="996" alt="Rostro con líneas punteadas de marcación prequirúrgica sobre párpados, pómulos y mandíbula." loading="lazy">
@@ -353,6 +449,8 @@ def home():
   </div>
 </section>
 
+{ig_section(r)}
+
 <section class="sec book" id="turnos" aria-labelledby="book-t">
   <div class="wrap book__in">
     <div>
@@ -360,27 +458,7 @@ def home():
       <p>Elegí sede, día y horario. Se abre WhatsApp con el mensaje listo para enviar.</p>
       <p class="note">Días y horarios de atención: Lorem ipsum dolor sit amet.</p>
     </div>
-    <form class="booker glass" data-booker>
-      <fieldset><legend>Consultorio</legend>
-        <label><input type="radio" name="sede" value="Belgrano" checked><span>Belgrano<small>Arcos 2173</small></span></label>
-        <label><input type="radio" name="sede" value="Nordelta"><span>Nordelta<small>Nuevo</small></span></label>
-      </fieldset>
-      <fieldset><legend>Día</legend>
-        <label><input type="radio" name="dia" value="lunes" checked><span>Lun</span></label>
-        <label><input type="radio" name="dia" value="martes"><span>Mar</span></label>
-        <label><input type="radio" name="dia" value="miércoles"><span>Mié</span></label>
-        <label><input type="radio" name="dia" value="jueves"><span>Jue</span></label>
-        <label><input type="radio" name="dia" value="viernes"><span>Vie</span></label>
-      </fieldset>
-      <fieldset><legend>Horario</legend>
-        <label><input type="radio" name="hora" value="por la mañana" checked><span>Mañana</span></label>
-        <label><input type="radio" name="hora" value="por la tarde"><span>Tarde</span></label>
-      </fieldset>
-      <label class="field"><span>¿Qué te gustaría consultar? (opcional)</span>
-        <select name="trat"><option value="">Elegí un tratamiento…</option>{"".join(f'<option>{e(x["name"])}</option>' for x in T)}<option>Otra consulta</option></select>
-      </label>
-      <button class="btn btn--glow btn--lg" type="submit">Enviar por WhatsApp {arrow()}</button>
-    </form>
+    {booker_form()}
   </div>
 </section>
 
@@ -405,7 +483,7 @@ def crumbs_schema(items):
         {"@type": "ListItem", "position": i + 1, "name": n, "item": SITE + (h or "")} for i, (n, h) in enumerate(items)]}
 
 
-def phero(r, crumb_items, h1, lead, img, kicker=None, facts=None, cta_text="Consultar por WhatsApp", cta_msg="Hola Dr. Corrado, quisiera hacer una consulta."):
+def phero(r, crumb_items, h1, lead, img, kicker=None, facts=None, cta_text="Consultar por WhatsApp", cta_msg="Hola Dr. Corrado, quisiera hacer una consulta.", trat=""):
     fx = ""
     if facts:
         fx = '<dl class="facts">' + "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in facts) + "</dl>"
@@ -418,7 +496,7 @@ def phero(r, crumb_items, h1, lead, img, kicker=None, facts=None, cta_text="Cons
       {kk}
       <h1 class="phero__h">{e(h1)}</h1>
       <p class="phero__lead">{e(lead)}</p>
-      <div class="hero__cta"><a class="btn btn--glow btn--lg" href="{wa(cta_msg)}" target="_blank" rel="noopener">{cta_text} {arrow()}</a></div>
+      <div class="hero__cta"><a class="btn btn--glow btn--lg" href="{wa(cta_msg)}" target="_blank" rel="noopener">{cta_text} {arrow()}</a><a class="btn btn--ghost btn--lg" href="{r}#turnos" data-turno data-trat="{e(trat)}">Pedir turno</a></div>
       {fx}
     </div>
     <div class="phero__img"><img src="{r}assets/img/t/{img}.jpg" alt="" fetchpriority="high"><span class="scan__line"></span><span class="scan__c c1"></span><span class="scan__c c2"></span><span class="scan__c c3"></span><span class="scan__c c4"></span></div>
@@ -460,7 +538,7 @@ def treatment(x):
     fq = faq_html(x["faq"], faqs)
     schema += faqs
     rel = "".join(card(r, BY_SLUG[s]) for s in x.get("related", []) if s in BY_SLUG)
-    body = f'''{phero(r, ci, x["h1"], x["lead"], x["img"], kicker=x.get("kicker"), cta_text="Consultar por " + x["name"].split(" ·")[0], cta_msg=f"Hola Dr. Corrado, quisiera consultar por {x['name'].split(' ·')[0].lower()}.")}
+    body = f'''{phero(r, ci, x["h1"], x["lead"], x["img"], kicker=x.get("kicker"), cta_text="Consultar por " + x["name"].split(" ·")[0], cta_msg=f"Hola Dr. Corrado, quisiera consultar por {x['name'].split(' ·')[0].lower()}.", trat=x["name"])}
 <div class="tbody wrap">
   <aside class="tside">
     {summary}

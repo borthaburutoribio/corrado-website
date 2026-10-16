@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles.css?v=7">
+<link rel="stylesheet" href="../styles.css?v=9">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://borthaburutoribio.github.io/corrado-website/"}, {"@type": "ListItem", "position": 2, "name": "Cirugía plástica", "item": "https://borthaburutoribio.github.io/corrado-website/cirugia-plastica/"}, {"@type": "ListItem", "position": 3, "name": "Lifting facial y cervical", "item": "https://borthaburutoribio.github.io/corrado-website/lifting-facial-y-cervical/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalProcedure", "name": "Lifting facial y Deep Plane", "description": "Deep Plane y lifting cervicofacial: trabaja las estructuras profundas de la cara en lugar de estirar la piel.", "url": "https://borthaburutoribio.github.io/corrado-website/lifting-facial-y-cervical/", "performer": {"@type": "Physician", "name": "Dr. Gustavo Corrado"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿El Deep Plane es siempre la mejor técnica?", "acceptedAnswer": {"@type": "Answer", "text": "No siempre. Es una de las técnicas que más interés genera, pero se elige según lo que necesita cada rostro."}}, {"@type": "Question", "name": "¿Voy a quedar con cara de estirada?", "acceptedAnswer": {"@type": "Answer", "text": "La idea es la contraria: un buen resultado no cambia quién sos."}}, {"@type": "Question", "name": "¿Se puede combinar con párpados?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, el lifting puede hacerse junto con una blefaroplastia."}}]}</script>
 </head>
 <body>
@@ -42,9 +42,9 @@
       <li><a class="nav__top" href="../consultorios/">Consultorios</a></li>
       <li><a class="nav__top" href="../contacto/">Contacto</a></li>
     </ul>
-    <a class="btn btn--glow nav__cta" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20un%20turno." target="_blank" rel="noopener">Pedir turno por WhatsApp <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    <a class="btn btn--glow nav__cta" href="../#turnos" data-turno>Pedir turno <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
   </nav>
-  <a class="btn btn--glow btn--sm hd__cta" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20un%20turno." target="_blank" rel="noopener">Pedir turno</a>
+  <a class="btn btn--glow btn--sm hd__cta" href="../#turnos" data-turno>Pedir turno</a>
   <button class="hd__menu" type="button" aria-expanded="false" aria-controls="nav"><span class="sr">Abrir menú</span><i></i><i></i></button>
 </header>
 <main id="contenido">
@@ -56,7 +56,7 @@
       <p class="badge"><span class="dot"></span>Lifting facial y cervical</p>
       <h1 class="phero__h">Lifting facial y Deep Plane</h1>
       <p class="phero__lead">No se trata de estirar la piel. El Deep Plane actúa sobre las estructuras profundas de la cara para lograr un rejuvenecimiento natural, respetando tu expresión y tu identidad.</p>
-      <div class="hero__cta"><a class="btn btn--glow btn--lg" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20consultar%20por%20lifting%20facial%20y%20deep%20plane." target="_blank" rel="noopener">Consultar por Lifting facial y Deep Plane <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div>
+      <div class="hero__cta"><a class="btn btn--glow btn--lg" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20consultar%20por%20lifting%20facial%20y%20deep%20plane." target="_blank" rel="noopener">Consultar por Lifting facial y Deep Plane <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a><a class="btn btn--ghost btn--lg" href="../#turnos" data-turno data-trat="Lifting facial y Deep Plane">Pedir turno</a></div>
       
     </div>
     <div class="phero__img"><img src="../assets/img/t/lifting-deep-plane.jpg" alt="" fetchpriority="high"><span class="scan__line"></span><span class="scan__c c1"></span><span class="scan__c c2"></span><span class="scan__c c3"></span><span class="scan__c c4"></span></div>
@@ -88,7 +88,29 @@
 </a></div></section>
 
 </main>
-<footer class="ft">
+<section class="sec ig ig--compact" id="instagram" aria-labelledby="ig-t">
+  <div class="wrap">
+    <h2 id="ig-t" class="h3">En Instagram</h2>
+    <div class="ig__head">
+      <a class="ig__prof" href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener">
+        <span class="ig__ring"><img src="../assets/img/dr-gustavo-corrado-retrato.jpg" width="340" height="595" alt="" loading="lazy"></span>
+        <span><b>@gc.cirujanoplastico</b><small>12,2 mil seguidores · 364 publicaciones</small></span>
+      </a>
+      <p>Más casos y videos en su Instagram.</p>
+      <a class="btn btn--glow" href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener">Seguir en Instagram <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    </div>
+    
+    <div class="ig__grid"><a class="ig__tile" href="https://www.instagram.com/p/DeaaXnPDhpS/" target="_blank" rel="noopener">
+      <img src="../assets/img/ig/nordelta.jpg" width="560" height="700" alt="Bienvenida al nuevo espacio de Nordelta" loading="lazy">
+      <span class="ig__ov"><span>Bienvenida al nuevo espacio de Nordelta</span><b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg> Ver en Instagram</b></span></a><a class="ig__tile" href="https://www.instagram.com/p/Dd-BKwxh-mZ/" target="_blank" rel="noopener">
+      <img src="../assets/img/ig/masterhub.jpg" width="560" height="700" alt="Charla en Masterhub 2026, Hotel Hilton" loading="lazy">
+      <span class="ig__ov"><span>Charla en Masterhub 2026, Hotel Hilton</span><b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg> Ver en Instagram</b></span></a><a class="ig__tile" href="https://www.instagram.com/reel/DccLk-_AEwH/" target="_blank" rel="noopener">
+      <img src="../assets/img/ig/blefaroplastia-antes-despues.jpg" width="560" height="700" alt="Blefaroplastia: antes y después" loading="lazy"><span class="ig__kind"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7.5-4.5z" fill="currentColor"/></svg><span class="sr">Reel</span></span>
+      <span class="ig__ov"><span>Blefaroplastia: antes y después</span><b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg> Ver en Instagram</b></span></a><a class="ig__tile" href="https://www.instagram.com/p/DcPLF7RGM2N/" target="_blank" rel="noopener">
+      <img src="../assets/img/ig/deep-plane.jpg" width="560" height="700" alt="¿La técnica más conocida es siempre la mejor?" loading="lazy">
+      <span class="ig__ov"><span>¿La técnica más conocida es siempre la mejor?</span><b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg> Ver en Instagram</b></span></a></div>
+  </div>
+</section><footer class="ft">
   <div class="ft__cta wrap">
     <p class="ft__big">¿Qué te gustaría mejorar?<br><span>Contámelo y lo vemos en consulta.</span></p>
     <a class="btn btn--glow btn--lg" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20una%20evaluaci%C3%B3n." target="_blank" rel="noopener">Pedir evaluación <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
@@ -106,7 +128,37 @@
   <p class="ft__word" aria-hidden="true">Gustavo Corrado</p>
   <p class="ft__legal wrap">Dr. Gustavo Corrado · Cirujano plástico · MN 113095 · Miembro de la SCPBA. La información de este sitio no reemplaza una consulta médica; los resultados varían en cada paciente. Fotos: archivo del doctor, @gc.cirujanoplastico y Saffiro Tecnologías Médicas. Propuesta de diseño de Tranquera Digital.</p>
 </footer>
-<div class="dock"><a class="btn btn--glow" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado%2C%20quisiera%20pedir%20una%20evaluaci%C3%B3n." target="_blank" rel="noopener">Pedir evaluación por WhatsApp</a></div>
-<script src="../script.js?v=7" defer></script>
+<a class="igfab" href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener" aria-label="Instagram del doctor, @gc.cirujanoplastico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg><span>@gc.cirujanoplastico</span></a>
+<div class="dock"><a class="btn btn--glow" href="../#turnos" data-turno>Pedir turno</a><a class="dock__ig" href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener" aria-label="Instagram del doctor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg></a></div>
+<dialog class="modal" id="modal-turno" aria-labelledby="modal-t">
+  <div class="modal__box">
+    <button class="modal__x" type="button" data-close aria-label="Cerrar">✕</button>
+    <h2 id="modal-t" class="h3">Pedí tu turno</h2>
+    <p class="modal__sub">Elegí sede, día y horario. Se abre WhatsApp con el mensaje listo para enviar.</p>
+    <form class="booker glass" data-booker>
+      <fieldset><legend>Consultorio</legend>
+        <label><input type="radio" name="sede" value="Belgrano" checked><span>Belgrano<small>Arcos 2173</small></span></label>
+        <label><input type="radio" name="sede" value="Nordelta"><span>Nordelta<small>Nuevo</small></span></label>
+      </fieldset>
+      <fieldset><legend>Día</legend>
+        <label><input type="radio" name="dia" value="lunes" checked><span>Lun</span></label>
+        <label><input type="radio" name="dia" value="martes"><span>Mar</span></label>
+        <label><input type="radio" name="dia" value="miércoles"><span>Mié</span></label>
+        <label><input type="radio" name="dia" value="jueves"><span>Jue</span></label>
+        <label><input type="radio" name="dia" value="viernes"><span>Vie</span></label>
+      </fieldset>
+      <fieldset><legend>Horario</legend>
+        <label><input type="radio" name="hora" value="por la mañana" checked><span>Mañana</span></label>
+        <label><input type="radio" name="hora" value="por la tarde"><span>Tarde</span></label>
+      </fieldset>
+      <label class="field"><span>¿Qué te gustaría consultar? (opcional)</span>
+        <select name="trat"><option value="">Elegí un tratamiento…</option><option>Blefaroplastia</option><option>Lifting facial y Deep Plane</option><option>Otoplastia</option><option>Implantes mamarios</option><option>Reducción mamaria</option><option>Abdominoplastia</option><option>Lipoescultura</option><option>Lipoescultura láser</option><option>Implantes de glúteos</option><option>Toxina botulínica</option><option>Ácido hialurónico</option><option>Radiesse</option><option>Plasma rico en plaquetas</option><option>Ultherapy</option><option>Endolift · Endoláser VELAS</option><option>Chip hormonal</option><option>Otra consulta</option></select>
+      </label>
+      <button class="btn btn--glow btn--lg" type="submit">Enviar por WhatsApp <span class="btn__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </form>
+    <p class="note">¿Preferís escribir directo? <a class="link" href="https://wa.me/5491126591809?text=Hola%20Dr.%20Corrado" target="_blank" rel="noopener">WhatsApp 11 2659-1809</a></p>
+  </div>
+</dialog>
+<script src="../script.js?v=9" defer></script>
 </body>
 </html>
