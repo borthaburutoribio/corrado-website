@@ -9,7 +9,7 @@ from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://borthaburutoribio.github.io/corrado-website/"
-V = "16"  # versión de css/js (cache)
+V = "17"  # versión de css/js (cache)
 e = html.escape
 
 
@@ -130,6 +130,25 @@ def ig_section(r, compact=False):
 </section>'''
 
 
+SHARE_ICONS = {
+    "whatsapp": ("WhatsApp", '<path d="M5 19l1.2-3.6A7.5 7.5 0 1 1 9 18.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.3 8.6c.3 2.4 2.2 4.4 4.6 4.8l.9-1.1 1.6.8c-.2 1-1 1.6-2 1.6-3.2-.3-5.8-2.9-6-6.1 0-1 .6-1.8 1.6-2l.8 1.6z" fill="currentColor"/>'),
+    "facebook": ("Facebook", '<path d="M13.5 20v-6.5h2.3l.4-2.8h-2.7V9c0-.8.3-1.4 1.4-1.4h1.4V5.2c-.3 0-1.1-.1-2.1-.1-2.1 0-3.4 1.2-3.4 3.5v2.1H8.5v2.8h2.3V20" fill="currentColor"/>'),
+    "x": ("X (Twitter)", '<path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
+    "telegram": ("Telegram", '<path d="M4 11.5 19.5 5l-2.6 14-5-3.8-2.6 2.5.3-4 7-6.4-8.6 5.4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>'),
+    "linkedin": ("LinkedIn", '<path d="M7 10v8M7 6.5v.01M11 18v-5c0-1.7 1.2-3 2.8-3S16.5 11.3 16.5 13v5M11 10v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
+    "pinterest": ("Pinterest", '<path d="M11 13.5 9.5 20M12 4.5a6 6 0 0 0-2.3 11.5c-.1-.6 0-1.5.2-2.1l1-4.1s-.3-.6-.3-1.4c0-1.3.8-2.3 1.7-2.3.8 0 1.2.6 1.2 1.3 0 .8-.5 2-.8 3.1-.2.9.5 1.7 1.4 1.7 1.7 0 2.9-2.2 2.9-4.7 0-2-1.4-3.4-3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'),
+    "email": ("Email", '<rect x="4" y="6" width="16" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 7.5 12 13l7.5-5.5" fill="none" stroke="currentColor" stroke-width="1.6"/>'),
+    "copy": ("Copiar link", '<path d="M10 14a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 0 0-5.7-5.7L11.5 7M14 10a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.1-1.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+    "more": ("Más opciones", '<path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
+}
+
+
+def share_bar(label="Compartí esta página", recommend=False):
+    btns = "".join(f'<button type="button" class="sh__b" data-net="{k}" aria-label="Compartir por {n}" title="{n}"><svg viewBox="0 0 24 24" aria-hidden="true">{p}</svg></button>' for k, (n, p) in SHARE_ICONS.items())
+    rec = '<p class="sh__rec">¿Te atendiste con él? <button type="button" class="link sh__recb" data-net="recommend">Recomendalo en X</button> o <button type="button" class="link sh__recb" data-net="recommend-wa">mandáselo a una amiga</button>.</p>' if recommend else ''
+    return f'<div class="sh"><p class="sh__t">{label}</p><div class="sh__row">{btns}</div><p class="sh__ok" role="status" hidden>Link copiado</p>{rec}</div>'
+
+
 def footer(r, current=""):
     cols = ""
     for cat in CATS:
@@ -145,8 +164,9 @@ def footer(r, current=""):
     <div class="ft__id">
       <a class="hd__brand" href="{r}">{MONO}<span><b translate="no">Gustavo Corrado</b><small>Cirujano plástico · MN 113095</small></span></a>
       <p>Belgrano: Arcos 2173, 1.º A, CABA<br>Nordelta: Lorem ipsum, Tigre</p>
-      <p><a href="{wa("Hola Dr. Corrado")}" target="_blank" rel="noopener">WhatsApp 11 2659-1809</a><br><a href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener">Instagram @gc.cirujanoplastico</a></p>
-      <button class="ft__share" type="button" data-share>Compartir este sitio</button>
+      <p><a href="{wa("Hola Dr. Corrado")}" target="_blank" rel="noopener">WhatsApp 11 2659-1809</a><br><a href="https://www.instagram.com/gc.cirujanoplastico/" target="_blank" rel="noopener">Instagram @gc.cirujanoplastico</a><br><a href="https://www.facebook.com/profile.php?id=100069136395153" target="_blank" rel="noopener">Facebook</a><br><a href="mailto:contacto@gustavo-corrado-cirujano-plastico.com">contacto@gustavo-corrado-cirujano-plastico.com</a></p>
+      <!-- A CONFIRMAR: que el mail de la web vieja siga funcionando -->
+      {share_bar("Compartí este sitio", recommend=True)}
     </div>
     {cols}
     <div><h3>El doctor</h3><ul><li><a href="{r}acerca-de-mi/">Acerca de mí</a></li><li><a href="{r}consultorios/">Consultorios</a></li><li><a href="{r}contacto/">Contacto</a></li><li><a href="{r}#antes-despues">Antes y después</a></li><li><a href="{r}#preguntas">Preguntas frecuentes</a></li></ul></div>
@@ -552,6 +572,7 @@ def treatment(x):
     {vid}
     {ba}
     <section class="tsec" id="faq"><h2 class="h3">Preguntas sobre {e(x["name"].split(" ·")[0].lower())}</h2><div class="faq__list">{fq}</div></section>
+    {share_bar("¿Conocés a alguien a quien le sirva? Compartí esta página")}
     <div class="say glass"><p>«Porque en cirugía no se trata de hacer más. Se trata de saber qué hacer, cuándo y por qué.»</p><span>Dr. Gustavo Corrado</span></div>
   </article>
 </div>

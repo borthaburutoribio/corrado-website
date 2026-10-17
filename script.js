@@ -214,3 +214,33 @@ function setGuide(open, scroll) {
 guideBtn?.addEventListener('click', () => setGuide(guideSec.hidden, true));
 $$('[data-guide-open], a[href="#guia"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); setGuide(true, true); }));
 if (location.hash === '#guia') setGuide(true, true);
+
+/* ---------- compartir en redes (como el AddToAny de la web vieja) ---------- */
+const shareText = () => `${document.title}`;
+const NETS = {
+  whatsapp: (u, t) => `https://wa.me/?text=${encodeURIComponent(t + ' ' + u)}`,
+  facebook: (u) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}`,
+  x: (u, t) => `https://twitter.com/intent/tweet?url=${encodeURIComponent(u)}&text=${encodeURIComponent(t)}`,
+  telegram: (u, t) => `https://t.me/share/url?url=${encodeURIComponent(u)}&text=${encodeURIComponent(t)}`,
+  linkedin: (u) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(u)}`,
+  pinterest: (u, t) => `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(u)}&description=${encodeURIComponent(t)}`,
+  email: (u, t) => `mailto:?subject=${encodeURIComponent(t)}&body=${encodeURIComponent(u)}`,
+  recommend: (u) => `https://twitter.com/intent/tweet?text=${encodeURIComponent('Recomiendo al Dr. Gustavo Corrado, cirujano plástico en Belgrano y Nordelta (@gc.cirujanoplastico en Instagram).')}&url=${encodeURIComponent(u)}`,
+  'recommend-wa': (u) => `https://wa.me/?text=${encodeURIComponent('Te paso el contacto del Dr. Gustavo Corrado, el cirujano plástico que te conté: ' + u)}`,
+};
+async function copyLink(btn) {
+  try { await navigator.clipboard.writeText(location.href); } catch (e) { /* sin permiso */ }
+  const ok = btn.closest('.sh')?.querySelector('.sh__ok');
+  if (ok) { ok.hidden = false; setTimeout(() => ok.hidden = true, 2200); }
+}
+$$('[data-net]').forEach(b => b.addEventListener('click', async () => {
+  const net = b.dataset.net, u = location.href.split('#')[0].split('?')[0], t = shareText();
+  if (net === 'copy') return copyLink(b);
+  if (net === 'more') {
+    if (navigator.share) { try { await navigator.share({ title: t, url: u }); } catch (e) { /* cancelado */ } }
+    else copyLink(b);
+    return;
+  }
+  const url = NETS[net](u, t);
+  if (net === 'email') location.href = url; else window.open(url, '_blank', 'noopener,width=640,height=560');
+}));

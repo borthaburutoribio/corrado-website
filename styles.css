@@ -618,3 +618,15 @@ body:has(.modal[open]) { overflow: hidden; }
   .js .rv { opacity: 1; transform: none; }
   .scan__line { display: none; }
 }
+
+/* barra para compartir (reemplaza el AddToAny de la web vieja) */
+.sh { margin: 22px 0 0; }
+.tmain .sh { margin: 0 0 36px; padding: 22px 24px; border-radius: var(--r); background: var(--surface); box-shadow: 0 0 0 1px var(--line) inset; }
+.sh__t { font-weight: 600; font-size: .92rem; margin: 0 0 12px; color: var(--text); }
+.sh__row { display: flex; flex-wrap: wrap; gap: 8px; }
+.sh__b { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--surface-2); color: var(--text); cursor: pointer; transition: background-color .3s var(--ease), color .3s var(--ease); }
+.sh__b svg { width: 20px; height: 20px; }
+.sh__b:hover, .sh__b:focus-visible { background: var(--glow); color: var(--ink); }
+.sh__ok { margin: 10px 0 0; color: var(--glow); font-size: .88rem; font-weight: 600; }
+.sh__rec { margin: 14px 0 0; font-size: .9rem; color: var(--muted); }
+.sh__recb { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; cursor: pointer; }
