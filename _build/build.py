@@ -5,11 +5,12 @@ Uso:  python _build/build.py   (desde la raíz del proyecto)
 Cada página vive en /<slug>/index.html, igual que las URLs de la web vieja.
 """
 import json, os, html, urllib.parse
+from content_old import OLD_FULL
 from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, IG_USER, IG_URL, IG_STATS, IG_POSTS, IG_HIGHLIGHTS, FB_RATING
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://borthaburutoribio.github.io/corrado-website/"
-V = "17"  # versión de css/js (cache)
+V = "18"  # versión de css/js (cache)
 e = html.escape
 
 
@@ -426,6 +427,13 @@ def home():
       <blockquote class="pull">«En cirugía facial no se trata de hacer más. Se trata de saber qué hacer, cuándo y por qué.»</blockquote>
       <p>Médico desde 2004, cinco años de residencia de cirugía general en el Hospital Vélez Sarsfield y especialista en cirugía plástica por la Universidad del Salvador. Pasó por el equipo de quemados del Hospital Alemán y por cirugía plástica infantil en el Garrahan y el Gutiérrez.</p>
       <p>En octubre de 2026 sumó un consultorio en Nordelta a su sede de Belgrano.</p>
+      <ul class="pillars">
+        <li><b>Años de experiencia</b><span>Médico desde 2004, cirujano plástico desde 2013.</span></li>
+        <li><b>Tecnología de punta</b><span>Siempre a la vanguardia: Endoláser VELAS y Ultherapy.</span></li>
+        <li><b>Atención personalizada</b><span>Cada caso es único. Te asesoramos sin compromiso.</span></li>
+        <li><b>Seriedad</b><span>Miembro de la Sociedad de Cirugía Plástica de Buenos Aires.</span></li>
+      </ul>
+      <!-- A CONFIRMAR: la web vieja decía "Te asesoramos sin cargo" -->
       <a class="btn btn--ghost" href="acerca-de-mi/">Trayectoria completa {arrow()}</a>
     </div>
   </div>
@@ -536,6 +544,25 @@ def blocks(r, items):
     return out
 
 
+def full_html(x):
+    items = OLD_FULL.get(x["slug"])
+    if not items:
+        return ""
+    out = ""
+    for kind, val in items:
+        if kind == "h":
+            out += f"<h3>{e(val)}</h3>"
+        elif kind == "p":
+            out += f"<p>{e(val)}</p>"
+        elif kind in ("ul", "ol"):
+            out += f"<{kind} class=\"ticks\">" + "".join(f"<li>{e(v)}</li>" for v in val) + f"</{kind}>"
+    name = x["name"].split(" ·")[0].lower()
+    return f'''<details class="full glass" id="completo">
+      <summary><span><b>Información completa sobre {e(name)}</b><small>Todo el detalle: indicaciones, procedimiento, postoperatorio y más</small></span></summary>
+      <div class="full__body">{out}</div>
+    </details>'''
+
+
 # ------------------------------------------------------------------ TRATAMIENTO
 def treatment(x):
     r = "../"
@@ -564,10 +591,11 @@ def treatment(x):
 <div class="tbody wrap">
   <aside class="tside">
     {summary}
-    <nav class="toc" aria-label="En esta página"><p>En esta página</p><ul>{toc}<li><a href="#faq">Preguntas</a></li></ul></nav>
+    <nav class="toc" aria-label="En esta página"><p>En esta página</p><ul>{toc}{'<li><a href="#completo">Información completa</a></li>' if OLD_FULL.get(x["slug"]) else ''}<li><a href="#faq">Preguntas</a></li></ul></nav>
   </aside>
   <article class="tmain">
     {secs}
+    {full_html(x)}
     {img2}
     {vid}
     {ba}

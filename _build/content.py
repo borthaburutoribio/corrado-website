@@ -469,6 +469,7 @@ CV = [
   ("2012", "Cirugía Plástica Infantil", "Hospital de Niños Dr. Ricardo Gutiérrez"),
   ("2013", "Cirugía Plástica Infantil", "Hospital Garrahan"),
   ("Rotaciones", "Cirugía Maxilofacial y Cirugía Oncológica", "Instituto de Diagnóstico, Hospital Pirovano y Hospital María Curie"),
+  ("Rotaciones", "Rotación en prestigiosos centros de cirugía estética", ""),
   ("2014–2015", "Equipo de Cirugía del Quemado y sus secuelas", "Hospital Alemán"),
   ("2019", "Miembro de la Sociedad de Cirugía Plástica de Buenos Aires", "SCPBA"),
   ("2026", "Disertante en Masterhub y VELAS Experience Mendoza", "Nuevo consultorio en Nordelta"),
