@@ -5,11 +5,11 @@ Uso:  python _build/build.py   (desde la raíz del proyecto)
 Cada página vive en /<slug>/index.html, igual que las URLs de la web vieja.
 """
 import json, os, html, urllib.parse
-from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, IG_USER, IG_URL, IG_STATS, IG_POSTS, IG_HIGHLIGHTS
+from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, IG_USER, IG_URL, IG_STATS, IG_POSTS, IG_HIGHLIGHTS, FB_RATING
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://borthaburutoribio.github.io/corrado-website/"
-V = "9"  # versión de css/js (cache)
+V = "16"  # versión de css/js (cache)
 e = html.escape
 
 
@@ -285,7 +285,7 @@ def home():
       <p class="hero__lead">Soy el Dr. Gustavo Corrado. No necesitás llegar sabiendo qué procedimiento elegir: alcanza con saber qué te gustaría mejorar y qué querés preservar.</p>
       <div class="hero__cta">
         <a class="btn btn--glow btn--lg" href="{wa("Hola Dr. Corrado, quisiera pedir una evaluación.")}" target="_blank" rel="noopener">Pedir evaluación {arrow()}</a>
-        <a class="btn btn--ghost btn--lg" href="#guia">Encontrá tu tratamiento</a>
+        <a class="btn btn--ghost btn--lg" href="#guia" data-guide-open>Encontrá tu tratamiento</a>
       </div>
       <dl class="hero__stats">
         <div><dt><span data-count="22">22</span></dt><dd>años de médico</dd></div>
@@ -321,28 +321,20 @@ def home():
 
 <div class="marquee" aria-hidden="true"><div class="marquee__t">{"".join(f"<span>{e(x['name'])}</span>" for x in T) * 2}</div></div>
 
-<section class="sec resumen wrap" aria-labelledby="res-t">
-  <h2 id="res-t" class="h2">En resumen</h2>
-  <div class="resumen__grid">
-    <p class="big">Cirujano plástico con matrícula nacional 113095, formado en cirugía general y reparadora antes que en estética. Hoy su consulta es sobre todo facial: <a href="cirugia-de-parpados/">blefaroplastia</a>, <a href="lifting-facial-y-cervical/">lifting Deep Plane</a> y <a href="cirugia-laser/">Endolift con Endoláser</a>.</p>
-    <ul class="why">
-      <li data-spot><b>Tecnología de punta</b><span>Endoláser VELAS 1470/980 nm y Ultherapy. Enseña la técnica a otros médicos en vivo.</span></li>
-      <li data-spot><b>Cada caso es único</b><span>Primero evalúa qué genera el problema; después indica. A veces la respuesta es «esto no te hace falta».</span></li>
-      <li data-spot><b>Base reparadora</b><span>Quemados en el Hospital Alemán y cirugía infantil en el Garrahan y el Gutiérrez.</span></li>
-      <li data-spot><b>Dos sedes</b><span>Arcos 2173 en Belgrano y el nuevo espacio de Nordelta.</span></li>
-    </ul>
-  </div>
-</section>
 
 <section class="sec trat" id="tratamientos" aria-labelledby="trat-t">
   <div class="wrap">
     <div class="sec__head"><h2 id="trat-t" class="h2">Tratamientos</h2><p>Los mismos de siempre, ahora con una página propia cada uno: qué es, tiempos, recuperación y preguntas.</p></div>
     <div class="tabs" role="tablist" aria-label="Categorías">{tabs}</div>
     {panels}
+    <div class="guide-open">
+      <p><b>¿No sabés cuál te conviene?</b> Contanos qué te gustaría mejorar y te mostramos las opciones.</p>
+      <button class="btn btn--ghost btn--lg" type="button" data-guide-toggle aria-expanded="false" aria-controls="guia">¿Qué te gustaría mejorar? <span class="guide-open__ch" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></button>
+    </div>
   </div>
 </section>
 
-<section class="sec guide" id="guia" aria-labelledby="guia-t">
+<section class="sec guide" id="guia" aria-labelledby="guia-t" hidden>
   <div class="wrap guide__in">
     <div class="guide__head">
       <h2 id="guia-t" class="h2">¿Qué te gustaría mejorar?</h2>
@@ -419,6 +411,26 @@ def home():
   </div>
 </section>
 
+<section class="sec pac" id="opiniones" aria-labelledby="pac-t">
+  <div class="wrap">
+    <div class="pac__head">
+      <h2 id="pac-t" class="h2">Lo que dicen sus pacientes</h2>
+      <div class="pac__score"><b>{FB_RATING[0]}</b><span>lo recomienda<br>{FB_RATING[1]}</span><span class="stars" aria-hidden="true">★★★★★</span></div>
+    </div>
+    <figure class="pac__lead glass">
+      <blockquote>{e(REVIEWS[0][1])}</blockquote>
+      <figcaption><b>{e(REVIEWS[0][0])}</b> · Facebook</figcaption>
+    </figure>
+    <div class="pac__grid">{"".join(f'<figure class="rv-card"><span class="stars" aria-hidden="true">★★★★★</span><blockquote>{e(t_)}</blockquote><figcaption><b>{e(n)}</b> · Facebook</figcaption></figure>' for n, t_ in REVIEWS[1:])}
+      <figure class="rv-card rv-card--video"><span class="pac__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z" fill="currentColor"/></svg></span><blockquote>Mari se hizo un Endolifting con retracción de papada y contó su experiencia en video.</blockquote><figcaption><a class="link" href="https://www.instagram.com/saffiro.tech/reel/DaqLONHxCnB/" target="_blank" rel="noopener">Ver el testimonio {arrow()}</a></figcaption></figure>
+    </div>
+    <div class="review-cta glass">
+      <p>¿Te atendiste con el doctor? Tu reseña ayuda al próximo paciente.</p>
+      <a class="btn btn--glow" href="https://www.facebook.com/profile.php?id=100069136395153&amp;sk=reviews" target="_blank" rel="noopener">Dejar una reseña {arrow()}</a>
+    </div>
+  </div>
+</section>
+
 <section class="sec tech" aria-labelledby="tech-t">
   <div class="wrap">
     <div class="sec__head"><h2 id="tech-t" class="h2">Tecnología y congresos</h2><p>Lo que usa en el consultorio y lo que enseña a otros médicos.</p></div>
@@ -438,16 +450,6 @@ def home():
   </div>
 </section>
 
-<section class="sec wrap" aria-labelledby="pac-t">
-  <div class="sec__head"><h2 id="pac-t" class="h2">Pacientes</h2><p>Opiniones publicadas en su página de Facebook.</p></div>
-  <div class="reviews">{reviews}
-    <figure class="rv-card rv-card--video" data-spot><blockquote>Mari se hizo un Endolifting con retracción de papada y contó su experiencia en video.</blockquote><figcaption><a class="link" href="https://www.instagram.com/saffiro.tech/reel/DaqLONHxCnB/" target="_blank" rel="noopener">Ver el testimonio {arrow()}</a></figcaption></figure>
-  </div>
-  <div class="review-cta glass">
-    <p>¿Te atendiste con el doctor? Tu reseña ayuda al próximo paciente.</p>
-    <a class="btn btn--glow" href="https://www.facebook.com/p/Dr-Gustavo-Corrado-Cirujano-Plastico-100069136395153/reviews" target="_blank" rel="noopener">Dejar una reseña {arrow()}</a>
-  </div>
-</section>
 
 {ig_section(r)}
 

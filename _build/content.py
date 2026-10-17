@@ -455,7 +455,10 @@ REVIEWS = [
   ("María Victoria Núñez", "Profesional muy serio y detallista, te hace lucir más joven con cambios que solo podés notar vos porque sabés lo que te hizo. El resto de la gente te ve espléndida, con un rostro fresco e iluminado. ¡Gracias Gustavo!"),
   ("Andrea Fabiana Mazza", "El doctor es una excelente persona, excelente profesional, respetuoso y ama su profesión. Súper recomendable."),
   ("Mónica Soler", "El Dr. Gustavo Corrado es muy buen profesional y totalmente recomendable. Aparte es una excelente persona y su trato es muy cordial."),
+  ("Lola Bredes", "El mejor de todos es poco, no solo como excelente profesional sino que también humanamente."),
+  ("Flavia Spago", "Excelentes sus trabajos. Las pacientes que atiende en mi gabinete, felices de cómo lucen con sus tratamientos."),
 ]
+FB_RATING = ("100 %", "10 opiniones en Facebook")
 
 CV = [
   ("2004", "Médico", "Universidad Abierta Interamericana (UAI)"),

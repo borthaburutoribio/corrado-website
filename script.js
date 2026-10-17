@@ -201,3 +201,16 @@ $$('.worry__b').forEach(b => b.addEventListener('click', () => {
   zone(b.dataset.zone, true);
   if (innerWidth >= 1100) document.querySelector('.guide__panel')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
 }));
+
+/* ---------- "¿Qué te gustaría mejorar?" plegado dentro de Tratamientos ---------- */
+const guideSec = document.getElementById('guia');
+const guideBtn = document.querySelector('[data-guide-toggle]');
+function setGuide(open, scroll) {
+  if (!guideSec || !guideBtn) return;
+  guideSec.hidden = !open;
+  guideBtn.setAttribute('aria-expanded', open);
+  if (open && scroll) guideSec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+guideBtn?.addEventListener('click', () => setGuide(guideSec.hidden, true));
+$$('[data-guide-open], a[href="#guia"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); setGuide(true, true); }));
+if (location.hash === '#guia') setGuide(true, true);
