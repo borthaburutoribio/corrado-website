@@ -117,15 +117,29 @@ $$('[data-ba]').forEach(ba => {
   const frame = ba.querySelector('.ba__frame'), range = ba.querySelector('.ba__range');
   const b = ba.querySelector('.ba__b'), a = ba.querySelector('.ba__a img'), cap = ba.querySelector('.ba__cap');
   range.addEventListener('input', () => frame.style.setProperty('--pos', range.value + '%'));
-  ba.querySelectorAll('[data-case]').forEach(btn => btn.addEventListener('click', () => {
-    const k = btn.dataset.case, n = btn.textContent.trim();
-    frame.style.setProperty('--ratio', `${btn.dataset.w}/${btn.dataset.h}`);
+  const altBtn = ba.querySelector('.ba__alt');
+  let cur = null, onAlt = false;
+  const show = (k, w, h, n, t) => {
+    frame.style.setProperty('--ratio', `${w}/${h}`);
     b.src = `${root}assets/img/antes-despues/${k}-antes.jpg`; a.src = `${root}assets/img/antes-despues/${k}-despues.jpg`;
     b.alt = `${n}, antes`; a.alt = `${n}, después`;
-    cap.innerHTML = `<b>${n}</b><span>${btn.dataset.t}</span>`;
+    cap.innerHTML = `<b>${n}</b><span>${t}</span>`;
     range.value = 50; frame.style.setProperty('--pos', '50%');
+  };
+  ba.querySelectorAll('[data-case]').forEach(btn => btn.addEventListener('click', () => {
+    cur = btn; onAlt = false;
+    show(btn.dataset.case, btn.dataset.w, btn.dataset.h, btn.textContent.trim(), btn.dataset.t);
     ba.querySelectorAll('[data-case]').forEach(x => x.setAttribute('aria-pressed', x === btn));
+    if (altBtn) { altBtn.hidden = !btn.dataset.alt; altBtn.textContent = 'Ver otra vista'; }
   }));
+  altBtn?.addEventListener('click', () => {
+    if (!cur || !cur.dataset.alt) return;
+    onAlt = !onAlt;
+    const n = cur.textContent.trim();
+    if (onAlt) show(cur.dataset.alt, cur.dataset.altW, cur.dataset.altH, n + ', otra vista', cur.dataset.t);
+    else show(cur.dataset.case, cur.dataset.w, cur.dataset.h, n, cur.dataset.t);
+    altBtn.textContent = onAlt ? 'Volver a la primera vista' : 'Ver otra vista';
+  });
 });
 
 /* ---------- turnero → WhatsApp ---------- */

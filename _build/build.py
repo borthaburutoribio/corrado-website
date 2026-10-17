@@ -6,11 +6,11 @@ Cada página vive en /<slug>/index.html, igual que las URLs de la web vieja.
 """
 import json, os, html, urllib.parse
 from content_old import OLD_FULL
-from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, IG_USER, IG_URL, IG_STATS, IG_POSTS, IG_HIGHLIGHTS, FB_RATING
+from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, IG_USER, IG_URL, IG_STATS, IG_POSTS, IG_HIGHLIGHTS, FB_RATING, CASE_ALT
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://borthaburutoribio.github.io/corrado-website/"
-V = "20"  # versión de css/js (cache)
+V = "21"  # versión de css/js (cache)
 e = html.escape
 
 
@@ -241,7 +241,13 @@ def card(r, x, big=False):
 def ba_html(r, cases, idp="ba"):
     k0 = cases[0]
     n, tr, w, h = CASES[k0]
-    btns = "".join(f'<button type="button" class="pill" aria-pressed="{"true" if k == k0 else "false"}" data-case="{k}" data-w="{CASES[k][2]}" data-h="{CASES[k][3]}" data-t="{CASES[k][1]}">{CASES[k][0]}</button>' for k in cases)
+    cases = [k for k in cases if k not in CASE_ALT.values()]
+    def alt_attr(k):
+        if k not in CASE_ALT:
+            return ""
+        a_ = CASE_ALT[k]
+        return f' data-alt="{a_}" data-alt-w="{CASES[a_][2]}" data-alt-h="{CASES[a_][3]}"'
+    btns = "".join(f'<button type="button" class="pill" aria-pressed="{"true" if k == k0 else "false"}" data-case="{k}" data-w="{CASES[k][2]}" data-h="{CASES[k][3]}" data-t="{CASES[k][1]}"{alt_attr(k)}>{CASES[k][0]}</button>' for k in cases)
     return f'''<div class="ba" data-ba data-root="{r}">
   <div class="ba__frame" style="--ratio:{w}/{h}">
     <img class="ba__b" src="{r}assets/img/antes-despues/{k0}-antes.jpg" width="{w}" height="{h}" alt="{n}, antes" loading="lazy">
@@ -252,6 +258,7 @@ def ba_html(r, cases, idp="ba"):
   </div>
   <div class="ba__side">
     <p class="ba__cap"><b>{n}</b><span>{tr}</span></p>
+    <button type="button" class="btn btn--ghost btn--sm ba__alt" hidden>Ver otra vista</button>
     <div class="pills" role="group" aria-label="Casos">{btns}</div>
     <p class="note">Pacientes reales del doctor. Los ojos se pixelan para cuidar su identidad. Los resultados varían en cada paciente.</p>
   </div>

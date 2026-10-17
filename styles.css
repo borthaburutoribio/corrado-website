@@ -267,6 +267,7 @@ button, a, input, select, textarea, label { touch-action: manipulation; -webkit-
 .ba__range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
 .ba__frame:focus-within { outline: 2px solid var(--glow); outline-offset: 4px; }
 .ba__cap { margin: 0 0 18px; }
+.ba__alt { margin: -4px 0 18px; }
 .ba__cap b { display: block; font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: -.03em; }
 .ba__cap span { color: var(--glow); font-weight: 600; font-size: .92rem; }
 

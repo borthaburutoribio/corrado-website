@@ -311,7 +311,7 @@ t(slug="rellenos-con-acido-hialuronico", cat="medicina-estetica", name="Ácido h
               "Valle de lágrimas (la ojera hundida)."]),
     ]),
   ],
-  cases=["labios", "lifting-pointlift", "lifting-pointlift-2", "menton-lineas-marioneta", "rinomodelacion", "surco-nasogeniano", "valle-de-lagrimas"],
+  cases=["labios", "lifting-pointlift", "menton-lineas-marioneta", "rinomodelacion", "surco-nasogeniano", "valle-de-lagrimas"],
   faq=[("¿Se puede combinar con Radiesse?", "Sí, se combinan de manera segura según la zona."),
        ("¿Cuánto dura?", "Lorem ipsum dolor sit amet.")],
   related=["botox", "relleno-con-radiesse", "plasma-rico-en-plaquetas"],
@@ -437,6 +437,9 @@ t(slug="chip-sexual", cat="otros-tratamientos", name="Chip hormonal", menu="Chip
 
 BY_SLUG = {x["slug"]: x for x in T}
 
+# casos que son otra toma de la misma paciente: se muestran con "Ver otra vista"
+CASE_ALT = {"lifting-pointlift": "lifting-pointlift-2"}
+
 CASES = {
   "entrecejo": ("Entrecejo", "Toxina botulínica", 800, 859),
   "frente": ("Frente", "Toxina botulínica", 770, 889),
@@ -444,7 +447,7 @@ CASES = {
   "patas-de-gallo": ("Patas de gallo", "Toxina botulínica", 800, 889),
   "labios": ("Labios", "Ácido hialurónico", 800, 496),
   "lifting-pointlift": ("Pointlift", "Ácido hialurónico", 540, 602),
-  "lifting-pointlift-2": ("Pointlift, otro caso", "Ácido hialurónico", 540, 555),
+  "lifting-pointlift-2": ("Pointlift, otra vista", "Ácido hialurónico", 540, 555),
   "menton-lineas-marioneta": ("Mentón y marioneta", "Ácido hialurónico", 540, 378),
   "rinomodelacion": ("Rinomodelación", "Ácido hialurónico", 800, 496),
   "surco-nasogeniano": ("Surco nasogeniano", "Ácido hialurónico", 646, 710),
