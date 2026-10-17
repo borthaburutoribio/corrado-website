@@ -10,7 +10,7 @@ from content import CATS, T, BY_SLUG, CASES, REVIEWS, CV, WA_MAIN, WA_NORDELTA, 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://borthaburutoribio.github.io/corrado-website/"
-V = "18"  # versión de css/js (cache)
+V = "20"  # versión de css/js (cache)
 e = html.escape
 
 
@@ -473,7 +473,7 @@ def home():
       </article>
       <article class="bx bx--c glass" data-spot><b class="bx__n">30.10</b><h3>VELAS Experience Mendoza</h3><p>Endolifting facial y corporal en vivo para médicos, junto a la Dra. Claudia Mesber.</p></article>
       <article class="bx bx--d glass" data-spot><b class="bx__n">2027</b><h3>BAAS Congress</h3><p>Disertante en Buenos Aires.</p></article>
-      <article class="bx bx--e glass" data-spot><b class="bx__n">US</b><h3>Ultherapy</h3><p>Ultrasonido microfocalizado: lifting sin cirugía, sin reposo.</p><a class="link" href="ultherapy/">Ver {arrow()}</a></article>
+      <article class="bx bx--e glass" data-spot><b class="bx__n">0 días</b><h3>Ultherapy</h3><p>Ultrasonido microfocalizado: efecto lifting sin cirugía y sin días de reposo.</p><a class="link" href="ultherapy/">Ver {arrow()}</a></article>
     </div>
   </div>
 </section>

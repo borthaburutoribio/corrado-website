@@ -284,7 +284,7 @@ t(slug="botox", cat="medicina-estetica", name="Toxina botulínica", menu="Botox"
   sections=[
     ("Cómo funciona", [
       "Se aplica toxina botulínica en el músculo que genera la arruga dinámica. El músculo se relaja y la piel de arriba deja de plegarse.",
-      "Profesional muy serio y detallista, te hace lucir más joven con cambios que solo podés notar vos: así lo describió una paciente.",
+      "Una paciente lo resumió así en Facebook: «te hace lucir más joven con cambios que solo podés notar vos».",
     ]),
   ],
   cases=["entrecejo", "frente", "cejas", "patas-de-gallo"],
